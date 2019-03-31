@@ -43,10 +43,11 @@ def self.calculate_for_same_year(from_month, from_day, from_year, from_date_leap
       end
     total_number_of_days += days_for_month
   end
+  total_number_of_days
 end
 
 def self.calculate_for_different_years(from_month, from_date_leap_year, from_year, from_day,
-  to_month, to_year, to_day, to_date_leap_year)
+                                       to_month, to_year, to_day, to_date_leap_year)
   total_number_of_days = get_number_of_days_between(from_year.to_i + 1, to_year.to_i - 1)
   (from_month.to_i..12).each do |month|
     days_for_month =
@@ -58,7 +59,12 @@ def self.calculate_for_different_years(from_month, from_date_leap_year, from_yea
     total_number_of_days += days_for_month
   end
   (1..to_month.to_i).each do |month|
-    days_for_month = month == to_month.to_i ? to_day.to_i : get_days_for(month: month.to_s, leap_year: to_date_leap_year).to_i
+    days_for_month =
+      if month == to_month.to_i
+        to_day.to_i
+      else
+        get_days_for(month: month.to_s, leap_year: to_date_leap_year).to_i
+      end
     total_number_of_days += days_for_month
   end
   total_number_of_days
@@ -92,10 +98,11 @@ to_date_leap_year = self.leap_year year: formatted_to_year
 
 days_between =
   if self.how_many_years_apart(formatted_from_year, formatted_to_year) == 0
-    self.calculate_for_same_year(formatted_from_month, from_day, formatted_from_year, from_date_leap_year,
+    self.calculate_for_same_year(formatted_from_month, formatted_from_day, formatted_from_year, from_date_leap_year,
                                  formatted_to_month, formatted_to_day)
   else
-    self.calculate_for_different_years(formatted_from_month, from_date_leap_year, formatted_from_year, formatted_from_day,
-                                       formatted_to_month, formatted_to_year, formatted_to_day, to_date_leap_year)
+    self.calculate_for_different_years(formatted_from_month, from_date_leap_year, formatted_from_year,
+                                       formatted_from_day, formatted_to_month, formatted_to_year, formatted_to_day,
+                                       to_date_leap_year)
   end
 puts "The days between the provided dates is #{days_between}"

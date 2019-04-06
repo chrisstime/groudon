@@ -23,7 +23,7 @@ def self.get_days_for(month:, leap_year:)
 end
 
 def self.leap_year(year:)
-  year.to_i%400 == 0
+  (year.to_i%400).zero?
 end
 
 def self.how_many_years_apart(from_year, to_year)
@@ -71,7 +71,7 @@ def self.calculate_for_different_years(from_month, from_date_leap_year, from_yea
 end
 
 def self.days_remaining_on(day:, month:, leap_year:)
-  self.get_days_for(month: month.to_s, leap_year: leap_year).to_i - day.to_i
+  get_days_for(month: month.to_s, leap_year: leap_year).to_i - day.to_i
 end
 
 def self.get_number_of_days_between(from_year, to_year)
@@ -82,27 +82,29 @@ def self.get_number_of_days_between(from_year, to_year)
   total_days
 end
 
-puts "Enter from date: "
-from_date = gets.strip
-puts "Enter to date: "
-to_date = gets.strip
-split_from_date = self.split_date date: from_date
-from_year, from_month, from_day = split_from_date[0..3], split_from_date[4..5], split_from_date[6..7]
-formatted_from_year, formatted_from_month, formatted_from_day = from_year.join, from_month.join, from_day.join
-from_date_leap_year = self.leap_year year: formatted_from_year
+def format_dates(input_date:)
+  split_date = split_date date: input_date
+  year = split_date[0..3]
+  month = split_date[4..5]
+  day = split_date[6..7]
 
-split_to_date = self.split_date date: to_date
-to_year, to_month, to_day = split_to_date[0..3], split_to_date[4..5], split_to_date[6..7]
-formatted_to_year, formatted_to_month, formatted_to_day = to_year.join, to_month.join, to_day.join
-to_date_leap_year = self.leap_year year: formatted_to_year
+  [year.join, month.join, day.join]
+end
+
+puts 'Enter from date: '
+from_year, from_month, from_day = format_dates input_date: gets.strip
+from_date_leap_year = leap_year year: from_year
+puts 'Enter to date: '
+to_year, to_month, to_day = format_dates input_date: gets.strip
+to_date_leap_year = leap_year year: to_year
 
 days_between =
-  if self.how_many_years_apart(formatted_from_year, formatted_to_year) == 0
-    self.calculate_for_same_year(formatted_from_month, formatted_from_day, formatted_from_year, from_date_leap_year,
-                                 formatted_to_month, formatted_to_day)
+  if how_many_years_apart(from_year, to_year).zero?
+    calculate_for_same_year(from_month, from_day, from_year,
+                            from_date_leap_year, to_month, to_day)
   else
-    self.calculate_for_different_years(formatted_from_month, from_date_leap_year, formatted_from_year,
-                                       formatted_from_day, formatted_to_month, formatted_to_year, formatted_to_day,
-                                       to_date_leap_year)
+    calculate_for_different_years(from_month, from_date_leap_year, from_year,
+                                  from_day, to_month, to_year, to_day,
+                                  to_date_leap_year)
   end
 puts "The days between the provided dates is #{days_between}"

@@ -11,7 +11,7 @@ def hourglassSum(arr)
   arr.each do |a|
     a.each do |i|
       i = 2
-      max_hourglass_diagonal_dimension = main_arr.dig(i+2,i+2)
+      max_hourglass_diagonal_dimension = main_arr.dig(i + 2, i + 2)
       # puts max_hourglass_diagonal_dimension
       unless max_hourglass_diagonal_dimension.nil?
         top_left_hourglass_node = main_arr[i][i]

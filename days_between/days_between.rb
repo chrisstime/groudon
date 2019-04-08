@@ -22,8 +22,8 @@ def self.get_days_for(month:, leap_year:)
   days_of_month[:"#{month}"]
 end
 
-def self.leap_year(year:)
-  (year.to_i%400).zero?
+def self.leap_year(year:) 
+  (year.to_i%400%4).zero?
 end
 
 def self.how_many_years_apart(from_year, to_year)
